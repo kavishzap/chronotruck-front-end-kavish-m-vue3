@@ -1,0 +1,29 @@
+version: '3.1'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: mongo
+    volumes:
+      - mongodb:/data/db
+
+  api:
+    build: apps/api
+    command: npm run dev
+    environment:
+      - HOST=0.0.0.0
+    ports:
+      - 3000:3000
+      - 3001:3001
+    volumes:
+      - ./apps/api:/api
+      - /api/node_modules
+    depends_on:
+      - mongo
+
+volumes:
+  mongodb:
